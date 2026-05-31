@@ -4,6 +4,7 @@ import {
   type Proposal,
   evaluateStatus,
 } from "@roomie/core";
+import { useMemo } from "react";
 import { useStore } from "../store.js";
 import { now, today } from "./time.js";
 
@@ -20,7 +21,10 @@ export function useCurrentMember(): Member | null {
 }
 
 export function useActiveMembers(): Member[] {
-  return useStore((s) => s.members.filter((m) => m.status === "active"));
+  // Select the stable `members` reference, then derive — returning a fresh
+  // array directly from the selector would loop under zustand v5.
+  const members = useStore((s) => s.members);
+  return useMemo(() => members.filter((m) => m.status === "active"), [members]);
 }
 
 export function useMemberLookup(): (id: string) => Member | undefined {
