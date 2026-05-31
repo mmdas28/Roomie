@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-surface text-ink antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Respect users who prefer reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Touch-sized, accessible focus ring used across interactive elements. */
+  .focusable {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+  }
+
+  .card {
+    @apply rounded-2xl border border-black/5 bg-white p-4 shadow-card;
+  }
+
+  .btn {
+    @apply focusable inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 text-base font-medium transition active:scale-[0.98] disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-ink;
+  }
+
+  .btn-ghost {
+    @apply btn border border-black/10 bg-white text-ink hover:bg-surface;
+  }
+
+  .input {
+    @apply focusable min-h-[44px] w-full rounded-xl border border-black/10 bg-white px-3.5 text-base placeholder:text-ink-muted;
+  }
+}
