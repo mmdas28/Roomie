@@ -18,11 +18,6 @@ import { Sheet } from "./Sheet.js";
 const PRIORITIES: Priority[] = ["high", "medium", "low"];
 const FREQS: FreqChoice[] = ["daily", "weekly", "biweekly"];
 
-/**
- * View + edit a chore. Any change that affects other roommates is routed
- * through the consent engine (store.propose) — which auto-applies instantly
- * when no one else is affected, and otherwise creates a pending proposal.
- */
 export function ChoreDetail({
   choreId,
   onClose,
@@ -55,14 +50,12 @@ export function ChoreDetail({
       p.payload.choreId === choreId,
   );
 
-  // Preview who'd need to approve the pending edits, given current selections.
   const editPayload: ProposalPayload | null = useMemo(() => {
     if (!chore) return null;
     const changes: Record<string, unknown> = {};
     if (title.trim() && title.trim() !== chore.title) changes.title = title.trim();
     if (priority !== chore.priority) changes.priority = priority;
-    const newFreq = choiceToFreq(freq);
-    if (freqToChoice(chore.frequency) !== freq) changes.frequency = newFreq;
+    if (freqToChoice(chore.frequency) !== freq) changes.frequency = choiceToFreq(freq);
     if (Object.keys(changes).length === 0) return null;
     return { type: "chore_edit", choreId, changes } as ProposalPayload;
   }, [chore, title, priority, freq, choreId]);
@@ -109,8 +102,8 @@ export function ChoreDetail({
   return (
     <Sheet open onClose={onClose} title={chore.title}>
       {pending && (
-        <div className="mb-4 flex items-center gap-2 rounded-xl bg-pending/10 px-3 py-2 text-sm text-pending">
-          <span aria-hidden="true">⏳</span>
+        <div className="mb-4 flex items-center gap-2 rounded border border-border bg-surface px-3 py-2 text-sm font-medium text-ink-muted">
+          <span aria-hidden="true" className="text-accent">●</span>
           Waiting on{" "}
           {pending.affectedMemberIds
             .map((id) => lookup(id)?.displayName.split(" ")[0])
@@ -121,17 +114,17 @@ export function ChoreDetail({
 
       {sent ? (
         <div className="py-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-2xl">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded border border-border bg-surface text-2xl">
             📨
           </div>
-          <p className="text-sm text-ink">{sent}</p>
+          <p className="text-sm font-medium text-ink">{sent}</p>
           <button className="btn-primary mt-5 w-full" onClick={onClose}>
             Done
           </button>
         </div>
       ) : (
         <div className="flex max-h-[70vh] flex-col gap-5 overflow-y-auto pb-2">
-          <label className="block text-sm font-medium text-ink">
+          <label className="block text-sm font-semibold text-ink">
             Title
             <input
               className="input mt-1.5"
@@ -141,7 +134,7 @@ export function ChoreDetail({
           </label>
 
           <div>
-            <p className="mb-1.5 text-sm font-medium text-ink">Priority</p>
+            <p className="mb-1.5 text-sm font-semibold text-ink">Priority</p>
             <div className="grid grid-cols-3 gap-2">
               {PRIORITIES.map((p) => (
                 <Chip key={p} on={priority === p} onClick={() => setPriority(p)}>
@@ -152,7 +145,7 @@ export function ChoreDetail({
           </div>
 
           <div>
-            <p className="mb-1.5 text-sm font-medium text-ink">How often</p>
+            <p className="mb-1.5 text-sm font-semibold text-ink">How often</p>
             <div className="grid grid-cols-3 gap-2">
               {FREQS.map((f) => (
                 <Chip key={f} on={freq === f} onClick={() => setFreq(f)}>
@@ -170,10 +163,10 @@ export function ChoreDetail({
             </button>
           )}
 
-          <hr className="border-black/5" />
+          <hr className="border-border" />
 
           <div>
-            <p className="text-sm font-medium text-ink">Who's in the rotation</p>
+            <p className="text-sm font-semibold text-ink">Who's in the rotation</p>
             <p className="mb-2 text-xs text-ink-muted">
               Changing this needs the okay of everyone involved.
             </p>
@@ -198,19 +191,19 @@ export function ChoreDetail({
             )}
           </div>
 
-          <hr className="border-black/5" />
+          <hr className="border-border" />
 
           {!confirmDelete ? (
             <button
-              className="text-sm font-medium text-danger"
+              className="text-sm font-semibold text-danger hover:opacity-80"
               onClick={() => setConfirmDelete(true)}
             >
               Delete this chore
             </button>
           ) : (
-            <div className="rounded-xl border border-danger/30 bg-danger/5 p-3">
+            <div className="rounded border border-danger/30 bg-danger/5 p-3">
               <p className="text-sm text-ink">
-                Delete “{chore.title}”?{" "}
+                Delete "{chore.title}"?{" "}
                 {affectedCount({ type: "chore_delete", choreId }) > 0
                   ? "Your roommates will need to approve."
                   : "This can't be undone."}
@@ -223,7 +216,7 @@ export function ChoreDetail({
                   Keep it
                 </button>
                 <button
-                  className="btn flex-1 bg-danger text-white"
+                  className="btn flex-1 bg-danger text-white hover:opacity-90"
                   onClick={() => submit({ type: "chore_delete", choreId })}
                 >
                   Delete
@@ -251,8 +244,8 @@ function Chip({
       type="button"
       onClick={onClick}
       aria-pressed={on}
-      className={`focusable rounded-xl border px-2 py-2.5 text-sm font-medium transition active:scale-[0.98] ${
-        on ? "border-accent bg-accent-soft text-accent-ink" : "border-black/10 bg-white text-ink"
+      className={`focusable rounded border px-2 py-2.5 text-sm font-semibold transition active:scale-[0.98] ${
+        on ? "border-ink bg-ink text-white" : "border-border bg-white text-ink hover:border-ink"
       }`}
     >
       {children}

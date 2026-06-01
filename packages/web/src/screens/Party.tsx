@@ -61,10 +61,10 @@ export function Party() {
   return (
     <div className="px-4 py-5">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-ink">{party.name}</h1>
+        <h1 className="text-[28px] font-extrabold tracking-tight text-ink">{party.name}</h1>
         {iAmOwner && (
           <button
-            className="text-sm font-medium text-accent"
+            className="focusable text-sm font-semibold text-ink-muted hover:text-ink"
             onClick={() => setSettingsOpen(true)}
           >
             Settings
@@ -97,7 +97,7 @@ export function Party() {
       {/* Pending requests */}
       {pending.length > 0 && (
         <section className="mt-6">
-          <h2 className="mb-2 text-sm font-semibold text-ink">
+          <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-ink-muted">
             Wants to join ({pending.length})
           </h2>
           <ul className="flex flex-col gap-2">
@@ -106,7 +106,7 @@ export function Party() {
                 <Avatar member={m} />
                 <span className="flex-1 font-medium text-ink">{m.displayName}</span>
                 <button
-                  className="focusable flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-ink-muted hover:bg-surface"
+                  className="focusable flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink-muted hover:bg-surface disabled:opacity-40"
                   onClick={() => declineMember(m.id)}
                   aria-label={`Decline ${m.displayName}`}
                   disabled={!iAmOwner}
@@ -114,7 +114,7 @@ export function Party() {
                   <XIcon className="h-5 w-5" />
                 </button>
                 <button
-                  className="focusable flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white hover:bg-accent-ink disabled:opacity-40"
+                  className="focusable flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white hover:opacity-80 disabled:opacity-40"
                   onClick={() => approveMember(m.id)}
                   aria-label={`Approve ${m.displayName}`}
                   disabled={!iAmOwner}
@@ -135,11 +135,11 @@ export function Party() {
       {/* Roster */}
       <section className="mt-6">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-muted">
             Roommates ({active.length})
           </h2>
           <button
-            className="text-sm font-medium text-accent"
+            className="focusable text-sm font-semibold text-ink-muted hover:text-ink"
             onClick={() => setAddOpen(true)}
           >
             Add roommate

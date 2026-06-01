@@ -30,9 +30,9 @@ export function Schedule() {
   return (
     <div className="px-4 py-5">
       <div className="mb-1 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-ink">Schedule</h1>
+        <h1 className="text-[28px] font-extrabold tracking-tight text-ink">Schedule</h1>
         <button
-          className="focusable flex items-center gap-1 text-sm font-medium text-accent"
+          className="focusable flex items-center gap-1 text-sm font-semibold text-ink-muted hover:text-ink"
           onClick={() => setAddOpen(true)}
         >
           <PlusIcon className="h-4 w-4" /> Mark away
@@ -69,7 +69,7 @@ export function Schedule() {
                 </h2>
               </div>
               {mb.length === 0 ? (
-                <p className="rounded-xl border border-dashed border-black/10 px-3 py-3 text-sm text-ink-muted">
+                <p className="rounded border border-dashed border-border px-3 py-3 text-sm text-ink-muted">
                   Around — no away time set.
                 </p>
               ) : (
@@ -208,8 +208,8 @@ function AddBlockSheet({ open, onClose }: { open: boolean; onClose: () => void }
                 aria-label={WEEKDAY_NAMES[i]}
                 className={`focusable h-10 w-10 rounded-full text-sm font-semibold transition ${
                   days.includes(i)
-                    ? "bg-accent text-white"
-                    : "bg-surface text-ink-muted"
+                    ? "bg-ink text-white"
+                    : "bg-surface text-ink-muted hover:border hover:border-ink"
                 }`}
               >
                 {d}

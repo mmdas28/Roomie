@@ -44,7 +44,7 @@ export function Proposals() {
 
   return (
     <div className="px-4 py-5">
-      <h1 className="mb-1 text-xl font-bold text-ink">Inbox</h1>
+      <h1 className="mb-1 text-[28px] font-extrabold tracking-tight text-ink">Inbox</h1>
       <p className="mb-4 text-sm text-ink-muted">
         Changes that affect the household land here.
       </p>
@@ -111,7 +111,7 @@ export function Proposals() {
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="mb-2 px-1 text-sm font-semibold text-ink">{title}</h2>
+      <h2 className="mb-2 px-1 text-xs font-bold uppercase tracking-widest text-ink-muted">{title}</h2>
       <div className="flex flex-col gap-2.5">{children}</div>
     </section>
   );
@@ -152,13 +152,13 @@ function VoteCard({ proposal }: { proposal: Proposal }) {
       {!declining ? (
         <div className="mt-4 flex gap-2">
           <button
-            className="btn flex-1 border border-black/10 bg-white text-danger hover:bg-danger/5"
+            className="btn flex-1 border border-border bg-white text-danger hover:bg-danger/5"
             onClick={() => setDeclining(true)}
           >
             <XIcon className="h-5 w-5" /> Not for me
           </button>
           <button
-            className="btn flex-1 bg-accent text-white hover:bg-accent-ink"
+            className="btn flex-1 bg-ink text-white hover:opacity-80"
             onClick={() => vote(proposal.id, "approve")}
           >
             <CheckIcon className="h-5 w-5" /> Looks good
@@ -233,7 +233,7 @@ function MineCard({ proposal }: { proposal: Proposal }) {
 function StatusCard({ proposal, note }: { proposal: Proposal; note: string }) {
   const tone =
     proposal.status === "approved"
-      ? "text-success"
+      ? "text-ink font-semibold"
       : proposal.status === "declined"
         ? "text-danger"
         : "text-ink-muted";

@@ -4,20 +4,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Roomie palette (§6)
-        accent: {
-          DEFAULT: "#5C8B5A", // sage
-          soft: "#EAF1E9",
-          ink: "#3F6A3D",
-        },
-        surface: "#F7F8FA",
+        // Monochrome system. Everything reads in black-and-white first.
         ink: {
-          DEFAULT: "#111827",
-          muted: "#6B7280",
+          DEFAULT: "#0A0A0A", // near-black — headings, primary buttons, filled surfaces
+          muted: "#737373",   // secondary text, inactive tabs, captions
         },
-        pending: "#F59E0B",
-        success: "#10B981",
-        danger: "#EF4444",
+        border: "#E5E5E5",    // single hairline grey for all dividers and outlines
+        surface: "#F5F5F5",   // hover states, subtle backgrounds
+        // One chromatic accent — electric blue. Used only for status
+        // badges/dots/focus rings. Nothing else gets a hue.
+        accent: "#2563EB",
+        // Destructive actions — kept red because safety-critical actions must
+        // never read as "just bold black."
+        danger: "#DC2626",
       },
       fontFamily: {
         sans: [
@@ -31,16 +30,17 @@ export default {
         ],
         mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
-      boxShadow: {
-        card: "0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06)",
-        sheet: "0 -8px 30px rgba(16,24,40,0.12)",
-      },
+      // Crisp corners everywhere. Override Tailwind's round defaults.
       borderRadius: {
-        xl: "1rem",
-        "2xl": "1.25rem",
+        xl: "6px",
+        "2xl": "6px",
+      },
+      // No soft drop-shadows. Separation comes from 1px hairlines + whitespace.
+      boxShadow: {
+        sheet: "0 -1px 0 #E5E5E5",
       },
       maxWidth: {
-        app: "30rem", // phone-width column on desktop
+        app: "30rem",
       },
     },
   },

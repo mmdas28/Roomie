@@ -5,11 +5,6 @@ import { useStore } from "../store.js";
 
 type Mode = "welcome" | "create" | "join";
 
-/**
- * First-run flow. Either create a party (become owner) or enter a join code.
- * Phase 1 is single-device, so "join" spins up a local household you own — the
- * real cross-device join + owner approval lands with the backend (Phase 2).
- */
 export function Onboarding() {
   const [mode, setMode] = useState<Mode>("welcome");
   const createParty = useStore((s) => s.createParty);
@@ -21,33 +16,34 @@ export function Onboarding() {
   const canCreate = name.trim().length > 0;
   const canJoin = name.trim().length > 0 && isValidJoinCode(code);
 
+  const slide = {
+    initial: { opacity: 0, x: 16 },
+    animate: { opacity: 1, x: 0 },
+    exit:    { opacity: 0, x: -16 },
+    transition: { duration: 0.14 },
+  };
+
   return (
     <div className="mx-auto flex min-h-dvh max-w-app flex-col px-6">
-      <div className="flex flex-1 flex-col justify-center py-10">
+      <div className="flex flex-1 flex-col justify-center py-12">
         <AnimatePresence mode="wait">
           {mode === "welcome" && (
-            <motion.div
-              key="welcome"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="text-center"
-            >
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-accent text-4xl text-white shadow-card">
+            <motion.div key="welcome" {...slide} className="text-center">
+              {/* Wordmark — black square with emoji, then bold type below */}
+              <div className="mx-auto mb-7 flex h-16 w-16 items-center justify-center rounded-lg bg-ink text-3xl">
                 <span aria-hidden="true">🏠</span>
               </div>
-              <h1 className="text-2xl font-bold text-ink">Roomie</h1>
-              <p className="mt-2 text-ink-muted">
+              <h1 className="text-[32px] font-extrabold tracking-tight text-ink">
+                Roomie
+              </h1>
+              <p className="mt-2 text-sm text-ink-muted">
                 Chores and schedules with your roommates — fair by design.
               </p>
-              <div className="mt-8 flex flex-col gap-3">
-                <button
-                  className="btn-primary"
-                  onClick={() => setMode("create")}
-                >
+              <div className="mt-10 flex flex-col gap-3">
+                <button className="btn-primary w-full" onClick={() => setMode("create")}>
                   Start a household
                 </button>
-                <button className="btn-ghost" onClick={() => setMode("join")}>
+                <button className="btn-ghost w-full" onClick={() => setMode("join")}>
                   I have a join code
                 </button>
               </div>
@@ -55,20 +51,15 @@ export function Onboarding() {
           )}
 
           {mode === "create" && (
-            <motion.div
-              key="create"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
+            <motion.div key="create" {...slide}>
               <BackLink onClick={() => setMode("welcome")} />
-              <h1 className="mt-4 text-xl font-bold text-ink">
+              <h1 className="mt-5 text-[28px] font-extrabold tracking-tight text-ink">
                 Name your household
               </h1>
-              <p className="mt-1 text-sm text-ink-muted">
+              <p className="mt-1.5 text-sm text-ink-muted">
                 You can change this any time.
               </p>
-              <label className="mt-6 block text-sm font-medium text-ink">
+              <label className="mt-7 block text-sm font-semibold text-ink">
                 Household name
                 <input
                   className="input mt-1.5"
@@ -78,7 +69,7 @@ export function Onboarding() {
                   autoFocus
                 />
               </label>
-              <label className="mt-4 block text-sm font-medium text-ink">
+              <label className="mt-4 block text-sm font-semibold text-ink">
                 Your name
                 <input
                   className="input mt-1.5"
@@ -98,19 +89,16 @@ export function Onboarding() {
           )}
 
           {mode === "join" && (
-            <motion.div
-              key="join"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
+            <motion.div key="join" {...slide}>
               <BackLink onClick={() => setMode("welcome")} />
-              <h1 className="mt-4 text-xl font-bold text-ink">Enter join code</h1>
-              <p className="mt-1 text-sm text-ink-muted">
+              <h1 className="mt-5 text-[28px] font-extrabold tracking-tight text-ink">
+                Enter join code
+              </h1>
+              <p className="mt-1.5 text-sm text-ink-muted">
                 Ask whoever set up your household for the 6-character code.
               </p>
               <input
-                className="input mt-6 text-center font-mono text-2xl tracking-[0.4em]"
+                className="input mt-7 text-center font-mono text-2xl font-bold tracking-[0.4em]"
                 placeholder="ACEFGH"
                 inputMode="text"
                 autoCapitalize="characters"
@@ -119,7 +107,7 @@ export function Onboarding() {
                 onChange={(e) => setCode(normalizeJoinCode(e.target.value))}
                 autoFocus
               />
-              <label className="mt-4 block text-sm font-medium text-ink">
+              <label className="mt-4 block text-sm font-semibold text-ink">
                 Your name
                 <input
                   className="input mt-1.5"
@@ -136,8 +124,8 @@ export function Onboarding() {
                 Request to join
               </button>
               <p className="mt-3 text-center text-xs text-ink-muted">
-                Heads up: cross-device joining arrives with accounts. For now this
-                sets up a household on this device.
+                Cross-device joining arrives with accounts. For now this sets up a
+                household on this device.
               </p>
             </motion.div>
           )}
@@ -152,7 +140,7 @@ function BackLink({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="focusable text-sm font-medium text-ink-muted hover:text-ink"
+      className="focusable text-sm font-semibold text-ink-muted hover:text-ink"
     >
       ← Back
     </button>

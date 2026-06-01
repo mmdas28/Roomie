@@ -7,16 +7,16 @@ import { TurnCard } from "../components/TurnCard.js";
 import { dueLabel } from "../lib/format.js";
 import {
   openTurns,
+  turnStatus,
   useActiveMembers,
   useCurrentMember,
-  turnStatus,
 } from "../lib/selectors.js";
 import { today } from "../lib/time.js";
 import { useStore } from "../store.js";
 
 export function Home() {
   const chores = useStore((s) => s.chores);
-  const turns = useStore((s) => s.turns);
+  const turns  = useStore((s) => s.turns);
   const blocks = useStore((s) => s.blocks);
   const members = useActiveMembers();
   const me = useCurrentMember();
@@ -24,7 +24,7 @@ export function Home() {
   const choreById = new Map(chores.map((c) => [c.id, c]));
   const open = openTurns(turns).filter((t) => choreById.has(t.choreId));
 
-  const mine = open.filter((t) => t.assignedTo === me?.id);
+  const mine    = open.filter((t) => t.assignedTo === me?.id);
   const overdue = open.filter((t) => turnStatus(t) === "overdue");
   const dueSoon = open.filter(
     (t) => turnStatus(t) !== "overdue" && t.assignedTo !== me?.id,
@@ -52,28 +52,33 @@ export function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-5">
+    <div className="flex flex-col gap-7 px-4 py-6">
       <div>
-        <h1 className="text-xl font-bold text-ink">Hey {firstName} 👋</h1>
-        <p className="text-sm text-ink-muted">Here's what's happening at home.</p>
+        <h1 className="text-[28px] font-extrabold tracking-tight text-ink">
+          Hey {firstName}
+        </h1>
+        <p className="mt-1 text-sm text-ink-muted">
+          Here's what's happening at home.
+        </p>
       </div>
 
       {awayToday.length > 0 && (
-        <section className="rounded-2xl bg-accent-soft px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-accent-ink">
+        <section className="rounded-lg border border-border bg-surface px-4 py-3">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-muted">
             Away today
           </p>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-3">
             {awayToday.map((m) => (
-              <span key={m.id} className="flex items-center gap-1.5 text-sm text-ink">
-                <Avatar member={m} size="sm" /> {m.displayName.split(" ")[0]}
+              <span key={m.id} className="flex items-center gap-1.5 text-sm font-semibold text-ink">
+                <Avatar member={m} size="sm" />
+                {m.displayName.split(" ")[0]}
               </span>
             ))}
           </div>
         </section>
       )}
 
-      <Section title="Your turns" count={mine.length} empty="You're all caught up. Nice.">
+      <Section title="Your turns" count={mine.length} empty="You're all caught up.">
         <AnimatePresence>
           {mine.map((t) => (
             <TurnCard key={t.id} turn={t} chore={choreById.get(t.choreId)!} />
@@ -102,7 +107,7 @@ export function Home() {
       )}
 
       <p className="pb-2 text-center text-xs text-ink-muted">
-        Next up after this:{" "}
+        Next up:{" "}
         {open[0] ? dueLabel(open[0].dueDate).toLowerCase() : "nothing scheduled"}.
       </p>
     </div>
@@ -123,9 +128,11 @@ function Section({
   const isEmpty = count === 0;
   return (
     <section>
-      <h2 className="mb-2 px-1 text-sm font-semibold text-ink">{title}</h2>
+      <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-ink-muted">
+        {title}
+      </h2>
       {isEmpty && empty ? (
-        <p className="rounded-2xl border border-dashed border-black/10 px-4 py-6 text-center text-sm text-ink-muted">
+        <p className="rounded-lg border border-border px-4 py-6 text-center text-sm text-ink-muted">
           {empty}
         </p>
       ) : (

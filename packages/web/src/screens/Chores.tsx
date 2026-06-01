@@ -17,10 +17,10 @@ import { useStore } from "../store.js";
 
 export function Chores() {
   const navigate = useNavigate();
-  const chores = useStore((s) => s.chores);
+  const chores    = useStore((s) => s.chores);
   const proposals = useStore((s) => s.proposals);
-  const lookup = useMemberLookup();
-  const [openId, setOpenId] = useState<string | null>(null);
+  const lookup    = useMemberLookup();
+  const [openId, setOpenId]       = useState<string | null>(null);
   const [presetsOpen, setPresetsOpen] = useState(false);
 
   const sorted = [...chores].sort(
@@ -47,10 +47,7 @@ export function Chores() {
               <button className="btn-primary" onClick={() => navigate("/chores/new")}>
                 Add a chore
               </button>
-              <button
-                className="btn-ghost"
-                onClick={() => setPresetsOpen(true)}
-              >
+              <button className="btn-ghost" onClick={() => setPresetsOpen(true)}>
                 Add from presets
               </button>
             </div>
@@ -62,14 +59,14 @@ export function Chores() {
   }
 
   return (
-    <div className="px-4 py-5">
-      <div className="mb-3 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-ink">Chores</h1>
+    <div className="px-4 py-6">
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-[28px] font-extrabold tracking-tight text-ink">Chores</h1>
         <button
-          className="text-sm font-medium text-accent"
+          className="focusable text-sm font-semibold text-ink-muted hover:text-ink"
           onClick={() => setPresetsOpen(true)}
         >
-          Add from presets
+          Add presets
         </button>
       </div>
 
@@ -86,6 +83,7 @@ export function Chores() {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.12 }}
               >
                 <button
                   className="focusable card flex w-full items-center gap-3 text-left active:scale-[0.99]"
@@ -94,16 +92,16 @@ export function Chores() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <PriorityDot priority={chore.priority} />
-                      <span className="truncate font-semibold text-ink">
+                      <span className="truncate font-bold text-ink">
                         {chore.title}
                       </span>
                       {!chore.isActive && (
-                        <span className="rounded-full bg-surface px-2 py-0.5 text-[11px] font-medium text-ink-muted">
+                        <span className="shrink-0 rounded border border-border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink-muted">
                           needs someone
                         </span>
                       )}
                       {pendingChoreIds.has(chore.id) && (
-                        <span className="rounded-full bg-pending/15 px-2 py-0.5 text-[11px] font-medium text-pending">
+                        <span className="shrink-0 rounded border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent">
                           pending
                         </span>
                       )}
@@ -122,9 +120,10 @@ export function Chores() {
         </AnimatePresence>
       </ul>
 
+      {/* FAB — solid black circle, stays within the column */}
       <div className="pointer-events-none fixed inset-x-0 bottom-20 z-20 mx-auto flex max-w-app justify-end px-4">
         <button
-          className="btn-primary pointer-events-auto !min-h-[52px] !w-[52px] !rounded-full !px-0 shadow-sheet"
+          className="btn-primary pointer-events-auto !min-h-[52px] !w-[52px] !rounded-full !px-0"
           onClick={() => navigate("/chores/new")}
           aria-label="Add a chore"
         >
@@ -138,7 +137,6 @@ export function Chores() {
   );
 }
 
-/** Re-runnable presets picker (§8B), skipping chores that already exist. */
 function PresetsSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const chores = useStore((s) => s.chores);
   const addPresetChores = useStore((s) => s.addPresetChores);
@@ -157,10 +155,7 @@ function PresetsSheet({ open, onClose }: { open: boolean; onClose: () => void })
 
   const add = () => {
     if (chosen.length > 0) {
-      addPresetChores(
-        chosen,
-        members.map((m) => m.id),
-      );
+      addPresetChores(chosen, members.map((m) => m.id));
     }
     setSelected({});
     onClose();
@@ -181,18 +176,18 @@ function PresetsSheet({ open, onClose }: { open: boolean; onClose: () => void })
                 type="button"
                 onClick={() => toggle(p.title)}
                 aria-pressed={Boolean(selected[p.title])}
-                className="focusable flex items-center gap-3 rounded-xl border border-black/5 px-3 py-2.5 text-left"
+                className="focusable flex items-center gap-3 rounded border border-border px-3 py-2.5 text-left hover:border-ink"
               >
                 <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-md border ${
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border font-bold text-sm transition ${
                     selected[p.title]
-                      ? "border-accent bg-accent text-white"
-                      : "border-black/20"
+                      ? "border-ink bg-ink text-white"
+                      : "border-border"
                   }`}
                 >
                   {selected[p.title] && "✓"}
                 </span>
-                <span className="flex-1 text-sm font-medium text-ink">
+                <span className="flex-1 text-sm font-semibold text-ink">
                   {p.title}
                 </span>
                 <PriorityDot priority={p.priority} />

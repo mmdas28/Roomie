@@ -4,11 +4,6 @@ import { useActiveMembers, useCurrentMember } from "../lib/selectors.js";
 import { Avatar } from "./Avatar.js";
 import { Sheet } from "./Sheet.js";
 
-/**
- * Top bar: party name + the "acting as" switcher. In Phase 1 (single device)
- * switching members lets you experience the consent flow from each roommate's
- * side — approving a proposal as someone else, etc.
- */
 export function AppHeader({ title }: { title?: string }) {
   const party = useStore((s) => s.party);
   const current = useCurrentMember();
@@ -17,13 +12,15 @@ export function AppHeader({ title }: { title?: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 mx-auto flex max-w-app items-center justify-between gap-3 border-b border-black/5 bg-white/90 px-4 py-3 backdrop-blur">
+    <header className="sticky top-0 z-30 mx-auto flex max-w-app items-center justify-between gap-3 border-b border-border bg-white px-4 py-3">
       <div className="min-w-0">
-        <p className="truncate text-base font-semibold text-ink">
+        <p className="truncate text-base font-bold tracking-tight text-ink">
           {title ?? party?.name ?? "Roomie"}
         </p>
         {!title && (
-          <p className="text-xs text-ink-muted">living together, easy</p>
+          <p className="text-[11px] uppercase tracking-widest text-ink-muted">
+            living together, easy
+          </p>
         )}
       </div>
 
@@ -31,11 +28,11 @@ export function AppHeader({ title }: { title?: string }) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="focusable flex items-center gap-2 rounded-full border border-black/10 py-1 pl-1 pr-2.5 active:scale-[0.98]"
+          className="focusable flex items-center gap-2 rounded border border-border py-1 pl-1 pr-2.5 active:scale-[0.98]"
           aria-label={`Acting as ${current.displayName}. Tap to switch.`}
         >
           <Avatar member={current} size="sm" />
-          <span className="max-w-[6rem] truncate text-xs font-medium text-ink">
+          <span className="max-w-[6rem] truncate text-xs font-semibold text-ink">
             {current.displayName}
           </span>
         </button>
@@ -55,17 +52,20 @@ export function AppHeader({ title }: { title?: string }) {
                   setCurrent(m.id);
                   setOpen(false);
                 }}
-                className="focusable flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left hover:bg-surface aria-[current=true]:bg-accent-soft"
+                className="focusable flex w-full items-center gap-3 rounded px-2 py-2.5 text-left hover:bg-surface aria-[current=true]:bg-surface"
                 aria-current={m.id === current?.id}
               >
                 <Avatar member={m} />
-                <span className="flex-1 text-sm font-medium text-ink">
+                <span className="flex-1 text-sm font-semibold text-ink">
                   {m.displayName}
                 </span>
                 {m.role === "owner" && (
-                  <span className="text-[11px] font-medium text-ink-muted">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
                     Owner
                   </span>
+                )}
+                {m.id === current?.id && (
+                  <span className="h-2 w-2 rounded-full bg-ink" aria-hidden="true" />
                 )}
               </button>
             </li>

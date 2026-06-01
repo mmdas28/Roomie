@@ -31,7 +31,7 @@ function MainApp() {
   const location = useLocation();
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-app flex-col bg-white shadow-[0_0_60px_rgba(0,0,0,0.04)]">
+    <div className="mx-auto flex min-h-dvh max-w-app flex-col bg-white">
       <AppHeader />
       <main className="flex-1 overflow-x-hidden">
         <AnimatePresence mode="wait">
@@ -40,7 +40,7 @@ function MainApp() {
             initial={{ opacity: 0, x: 12 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
           >
             <Routes location={location}>
               <Route path="/" element={<Home />} />
