@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "https://maven.minecraftforge.net" }
+        maven { url = "https://repo.spongepowered.org/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.0.0"
+group = "me.pvmn.client"
+archivesBaseName = "pvmn-client"
+
+// Minecraft 1.8.9 requires Java 8.
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+    // The mappings used to deobfuscate Minecraft. stable_22 is the standard
+    // community mapping set for 1.8.9.
+    mappings = "stable_22"
+}
+
+dependencies {
+    // No external runtime dependencies. Everything ships inside the jar.
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
