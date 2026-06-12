@@ -1,0 +1,17 @@
+[
+  {
+    "modid": "pvmn",
+    "name": "pvmn.exe",
+    "description": "pvmn.exe - a lightweight Forge 1.8.9 client featuring a Raven B++ inspired ClickGUI, customizable keybinds and FPS optimizations.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "authorList": [
+      "pvmn"
+    ],
+    "credits": "Built on Minecraft Forge.",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
